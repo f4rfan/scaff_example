@@ -17,7 +17,7 @@ class TestWorker(TestCase):
 
     @patch(
         "worker.get_user_logger",
-		return_value=logging.getLogger(),
+        return_value=logging.getLogger(),
     )
     def setUp(self, logger):
         self.monkeypatch = MonkeyPatch()
@@ -38,18 +38,10 @@ class TestWorker(TestCase):
         Test worker entrypoint execution with config.
         """
 
-        config = MagicMock()
         cfg_file = NamedTemporaryFile(prefix="application", suffix=".conf")
         sys.argv = [__file__, cfg_file.name]
 
-        config.getString = MagicMock(return_value=os.path.realpath(__file__))
-
-        with patch(
-			"exampleenginepythonqiyhbwvw.app.Main.main", return_value=0
-		), patch(
-            "dataproc_sdk.dataproc_sdk_launcher.launcher.SparkLauncher.execute",
-            return_value=0,
-        ):
+        with patch("dataproc_sdk.dataproc_sdk_launcher.launcher.SparkLauncher.execute", return_value=0):
             ret_code = main()
 
         self.assertEqual(ret_code, 0)
